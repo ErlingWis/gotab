@@ -93,35 +93,6 @@ func CreateServer(disk storage.Disk) *gin.Engine {
 		ctx.Status(200)
 	})
 
-	r.GET("/v1/:partition", func(ctx *gin.Context) {
-		partitionName := ctx.Param("partition")
-
-		partition := disk.GetPartition(partitionName)
-		entities, err := partition.ListEntities()
-
-		if err != nil {
-			ctx.JSON(400, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-
-		ctx.JSON(200, entities)
-	})
-
-	r.GET("/v1", func(ctx *gin.Context) {
-		partitions, err := disk.ListPartitionNames()
-
-		if err != nil {
-			ctx.JSON(400, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-
-		ctx.JSON(200, partitions)
-	})
-
 	r.GET("/", func(ctx *gin.Context) {
 
 		routes := make(map[string][]string)

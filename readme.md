@@ -1,4 +1,5 @@
 # gotab
+[![Docker](https://github.com/ErlingWis/gotab/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/ErlingWis/gotab/actions/workflows/docker-publish.yml)
 
 minimal object store
 
