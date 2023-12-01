@@ -23,6 +23,39 @@ env:
 
 
 jobs:
+  containerd:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Set up containerd
+        uses: crazy-max/ghaction-setup-containerd@v3
+      -
+        name: Build Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          outputs: type=oci,dest=/tmp/image.tar
+      -
+        name: Import image in containerd
+        run: |
+          sudo ctr i import --base-name ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --digests --all-platforms /tmp/image.tar
+      -
+        name: Push image with containerd
+        run: |
+          sudo ctr i push --user "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}" ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
   build:
 
     runs-on: ubuntu-latest
