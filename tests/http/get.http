@@ -1,0 +1,37 @@
+@port = 3000
+@host=localhost
+@schema=http
+@version=v1
+@address={{schema}}://{{host}}:{{port}}/{{version}}
+
+GET {{address}} HTTP/1.1
+Accept: application/json
+###
+
+GET {{address}}/persons HTTP/1.1
+Accept: application/json
+###
+
+POST {{address}}/persons/jane HTTP/1.1
+Content-Type: application/json
+
+{
+    "values": {
+    "name": "Jane Doe",
+    "age": "25",
+    "city": "New York",
+    "country": "USA",
+    "occupation": "Software Engineer",
+    "hobby": "Reading",
+    "favorite_color": "Blue",
+    "language": "English",
+    "sports": "Soccer",
+    "music_genre": "Rock"
+    }
+
+}
+
+###
+
+GET  {{address}}/persons/jane HTTP/1.1
+Accept: application/json

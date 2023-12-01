@@ -8,9 +8,9 @@ import (
 )
 
 type EntityData struct {
-	Values       map[string]string
-	ETag         int64
-	LastModified time.Time
+	Values       map[string]string `json:"values"`
+	ETag         int64             `json:"eTag"`
+	LastModified time.Time         `json:"lastModified"`
 }
 
 func (data EntityData) encode() ([]byte, error) {

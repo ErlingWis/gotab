@@ -8,7 +8,7 @@ import (
 func CreateServer(disk storage.Disk) *gin.Engine {
 	r := gin.Default()
 
-	r.GET("/disk/:partition/:entity", func(ctx *gin.Context) {
+	r.GET("/v1/:partition/:entity", func(ctx *gin.Context) {
 		partitionName := ctx.Param("partition")
 		entityName := ctx.Param("entity")
 
@@ -25,7 +25,7 @@ func CreateServer(disk storage.Disk) *gin.Engine {
 		ctx.JSON(200, entity.EntityData)
 	})
 
-	r.POST("/disk/:partition/:entity", func(ctx *gin.Context) {
+	r.POST("/v1/:partition/:entity", func(ctx *gin.Context) {
 		partitionName := ctx.Param("partition")
 		entityName := ctx.Param("entity")
 		data := &storage.EntityData{}
@@ -53,10 +53,10 @@ func CreateServer(disk storage.Disk) *gin.Engine {
 			return
 		}
 
-		ctx.JSON(200, entity.EntityData)
+		ctx.Status(200)
 	})
 
-	r.DELETE("/disk/:partition/:entity", func(ctx *gin.Context) {
+	r.DELETE("/v1/:partition/:entity", func(ctx *gin.Context) {
 		partitionName := ctx.Param("partition")
 		entityName := ctx.Param("entity")
 
@@ -77,7 +77,7 @@ func CreateServer(disk storage.Disk) *gin.Engine {
 		ctx.Status(200)
 	})
 
-	r.DELETE("/disk/:partition", func(ctx *gin.Context) {
+	r.DELETE("/v1/:partition", func(ctx *gin.Context) {
 		partitionName := ctx.Param("partition")
 
 		partition := disk.GetPartition(partitionName)
@@ -93,7 +93,7 @@ func CreateServer(disk storage.Disk) *gin.Engine {
 		ctx.Status(200)
 	})
 
-	r.GET("/disk/:partition", func(ctx *gin.Context) {
+	r.GET("/v1/:partition", func(ctx *gin.Context) {
 		partitionName := ctx.Param("partition")
 
 		partition := disk.GetPartition(partitionName)
@@ -109,7 +109,7 @@ func CreateServer(disk storage.Disk) *gin.Engine {
 		ctx.JSON(200, entities)
 	})
 
-	r.GET("/disk", func(ctx *gin.Context) {
+	r.GET("/v1", func(ctx *gin.Context) {
 		partitions, err := disk.ListPartitionNames()
 
 		if err != nil {
@@ -121,5 +121,22 @@ func CreateServer(disk storage.Disk) *gin.Engine {
 
 		ctx.JSON(200, partitions)
 	})
+
+	r.GET("/", func(ctx *gin.Context) {
+
+		routes := make(map[string][]string)
+
+		for _, v := range r.Routes() {
+			methods := routes[v.Path]
+			if methods == nil {
+				methods = make([]string, 0)
+			}
+			methods = append(methods, v.Method)
+			routes[v.Path] = methods
+		}
+
+		ctx.JSON(200, routes)
+	})
+
 	return r
 }

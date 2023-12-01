@@ -19,10 +19,10 @@ FROM gcr.io/distroless/base-debian11 AS build-release-stage
 
 WORKDIR /
 
-COPY --from=build-stage /bin/gotab /gotab
+COPY --from=build-stage /app/bin/gotab /gotab
 
 EXPOSE 8080
 
 USER nonroot:nonroot
-
+ENV GIN_MODE=release
 ENTRYPOINT ["/gotab"]
