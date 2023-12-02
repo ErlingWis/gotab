@@ -1,11 +1,13 @@
 package api
 
 import (
+	"net/http"
+
 	"erli.ng/gotab/storage"
 	"github.com/gin-gonic/gin"
 )
 
-func CreateServer(disk storage.Disk) *gin.Engine {
+func CreateServer(disk storage.Disk) *http.Server {
 	r := gin.Default()
 
 	r.GET("/v1/:partition/:entity", func(ctx *gin.Context) {
@@ -109,5 +111,10 @@ func CreateServer(disk storage.Disk) *gin.Engine {
 		ctx.JSON(200, routes)
 	})
 
-	return r
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: r,
+	}
+
+	return srv
 }
