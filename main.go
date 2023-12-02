@@ -10,6 +10,14 @@ import (
 	"erli.ng/gotab/storage"
 )
 
+func init() {
+	fmt.Println(`
+				 ┓ 
+	┏┓┏┓╋┏┓┣┓
+	┗┫┗┛┗┗┻┗┛
+	 ┛
+	 `)
+}
 func main() {
 
 	disk := flag.String("disk", "./.tmp", "disk location")
